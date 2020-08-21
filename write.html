@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../CKEDITOR/ckeditor4/ckeditor.js"></script>
+    <title>Tea Time</title>
+</head>
+
+<body>
+    <h1>글쓰기</h1>
+    <form action="write_action.html">
+        제목<input type="text" name="nm_title" value=""><br>
+        비밀번호<input type="password" name="nm_password" value=""><br>
+        글 주제<br>
+        커피<input type="checkbox" name="nm_coffeeTea" value="coffee">
+        차<input type="checkbox" name="nm_coffeeTea" value="tea">
+        아이스 음료<input type="checkbox" name="nm_coffeeTea" value="icetea">
+
+        <br>
+        내용<br>
+        <textarea name="nm_content" cols=20 rows=10></textarea><br>
+        <input type="submit" value="글 등록">
+        <input type="resert" value="다시 쓰기">
+
+    </form>
+    <script>
+        CKEDITOR.replace('nm_content', {
+            filebrowserUploadUrl: "./serverSide.php?type=file",
+            filebrowserImageUploadUrl: "./serverSide.php?type=image",
+        });
+    </script>
+</body>
+
+</html>

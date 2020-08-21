@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<script>
+    var v_datas = JSON.parse(localStorage.getItem("reviewList"));
+   
+    var v_gul = v_datas[0];
+
+    var v_reply = {};
+    v_reply.title = "응답1";
+    v_reply.writer = "댓글알바";
+    v_reply.date = new Date().toLocaleDateString();
+
+    if(!v_gul.reply){
+        v_gul.reply =  [];
+        v_gul.reply.push(v_reply);
+    }else {
+        v_gul.reply.push(v_reply);       
+    }
+
+    localStorage.setItem("reviewList",JSON.stringify(v_datas));
+</script>

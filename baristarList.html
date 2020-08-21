@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Time</title>
+</head>
+
+<body>
+    <h3>익명 커피·차 커뮤니티 Tea Time</h3>
+    <a href="notice.html">공지사항</a>
+    <a href="cafeReviewList.html">후기란</a>
+    <a href="teaStory.html">차 이야기</a>
+    <!-- 이건 방문자수 api -->
+    <script id="_wauz6x">var _wau = _wau || []; _wau.push(["small", "npqnwqh0b0", "z6x"]);</script>
+    <script async src="//waust.at/s.js"></script>
+    <br>
+    <script src="./jsp.js"></script>
+    <br>
+    <script async src="//client.uchat.io/uchat.js"></script>
+    <u-chat room='TeaTime' style="display:inline-block; width:40%; height:60%;"></u-chat>
+    <script>
+        var v_pgNum = request.getParameter("pg_num");
+        var v_curPage = 1;    // 현재 페이지 디폴트 값
+        if (v_pgNum) {
+            v_curPage = v_pgNum;
+        }
+
+        //localstorage내용 읽어와서 출력하기
+
+        var v_tblName = "baristarList";
+        var v_arrDatas = JSON.parse(localStorage.getItem(v_tblName));
+        document.write("<h3>바리스타 이야기</h3>");
+        if (v_arrDatas != null) {
+            // 페이지 나누기, 페이지당 몇개 10개, 전체페이지 수 :전체글수 / 페이지당글수
+            var v_pgPGSu = 10;
+            var v_totalGSu = v_arrDatas.length;
+            var v_totalPG = parseInt(v_totalGSu / v_pgPGSu);
+
+            var v_startNum = (v_curPage - 1) * v_pgPGSu;   // 페이지별 스타트 글넘버 배열 index
+            var v_endNum = v_startNum + v_pgPGSu;
+
+            if (v_endNum > (v_arrDatas.length - 1)) {
+                v_endNum = v_arrDatas.length;
+            }
+
+            var v_tblStr = "<form id='id_form'>";
+            v_tblStr += "<table border=1>";
+            v_tblStr += "<tr><th>No</th><th>제목</th><th>주제</th></tr>"
+            for (var i = v_startNum; i < v_endNum; i++) {
+                v_tblStr += "<tr>";
+                v_tblStr += "<td>" + v_arrDatas[i].num + "</td>";
+                v_tblStr += "<td><a href='read_b.html?g_num=" + v_arrDatas[i].num + "' >" + v_arrDatas[i].title + "</a></td>";
+                v_tblStr += "<td>" + v_arrDatas[i].baristar + "</td>";
+                v_tblStr += "</tr>";
+            }
+            v_tblStr += "</table></form>";
+
+            //사용자 페이지 클릭 모양 맹글어주기
+            for (var v_page = 1; v_page <= v_totalPG; v_page++) {
+                if (v_page == v_curPage) {
+                    v_tblName += "<a style='font-size:2em;color:red' herf='baristarList.html?pg_num'>" + v_page + "</a>";
+
+                } else {
+                    v_tblStr += "<a href='baristarList.html?pg_num=" + v_page + "'>" + v_page + "</a>";
+
+                }
+                v_tblStr += "&nbsp;&nbsp;&nbsp;&nbsp;";
+            }
+            v_tblStr += "<a href='write.html'>글쓰기</a>";
+            document.write(v_tblStr);  // 화면에 출력
+        } else {
+            document.write("<br><a href='write.html'>글쓰기</a><br>");
+        }
+    </script>
+</body>
+
+</html>

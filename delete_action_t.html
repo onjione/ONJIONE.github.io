@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<script src="./jsp.js"></script>
+<script>
+    // 사용자가 지우려고 선택한 num 받아오기
+
+
+    var v_nums = request.getParameterValues("nm_delNum"); // 배열
+    var v_tblName = "teaList";
+    var v_dataArrs = JSON.parse(localStorage.getItem(v_tblName));
+    for (var i = 0; i < v_nums.length; i++) {
+        var v_delNum = v_nums[i];
+        for (var j = 0; j < v_dataArrs.length; j++) {
+            if (v_dataArrs[j].num == v_delNum) {
+                v_dataArrs.splice(j, 1);
+                j--;                  //지웠을땐 j값 증가 못하게, 뒷놈이 앞으로
+            }
+        }
+    }
+    localStorage.setItem(v_tblName, JSON.stringify(v_dataArrs));
+    location.replace("teaStory.html"); // 눈으로 편하게 확인하기 위해서
+</script>

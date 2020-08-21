@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./jsp.js"></script>
+    <script src="./ckeditor4/ckeditor.js"></script>
+    <title>Tea Time</title>
+</head>
+
+<body>
+    <h1>바리스타 이야기</h1>
+    <script id="_wauz6x">var _wau = _wau || []; _wau.push(["small", "npqnwqh0b0", "z6x"]);</script>
+    <script async src="//waust.at/s.js"></script>
+    제목<input type="text" name="nm_title" value=""><br>
+    글 주제<br>
+    자격증<input type="checkbox" name="nm_baristar" value="baristar">
+    취업<input type="checkbox" name="nm_baristar" value="job">
+    잡담<input type="checkbox" name="nm_baristar" value="free"><br>
+    내용<br>
+    <textarea id="nm_content" name="nm_content" cols=20 rows=10></textarea><br>
+    <br>
+    <b>덧글 달기</b><br>
+    익명의 사용자: <input type="text" id="id_reple" value="" placeholder="고운 말을 씁시다.">
+    <input type="password" id="id_rePw" value="" placeholder="비밀번호 입력"><input type="submit" value="덧글 등록">
+    <br>
+    <br>
+    비밀번호 <input type="password" id="id_checkPw" value="" placeholder="작성시 비밀번호를 입력해주세요.">
+    <input type=submit value="글 수정"><br>
+    <input type=submit value="글 삭제" onclick="f_delete()"><br>
+    <a href="baristarList.html">글 목록</a>
+
+    <script>
+        var v_title = document.getElementsByName("nm_title")[0];
+        var v_baristar = document.getElementsByName("nm_baristar");         // 0만 가져오면 체크박스 다 못가져오니까
+        var v_content = document.getElementsByName("nm_content")[0];
+        var v_tblName = "baristarList";
+        var v_gnum = request.getParameter("g_num");
+        var v_password = document.getElementById("id_checkPw");
+        var v_replyArea = document.getElementById("reply_area");
+        var v_repleContent = document.getElementById("id_reple");
+        var v_replePw = document.getElementById("id_rePw");
+        var v_arrDatas = JSON.parse(localStorage.getItem(v_tblName));
+
+        // 하나가 들어있던 두개가 들어있던 배열을 가져옴... 타이틀은 0번
+        function f_reple() {
+            for (var i = 0; i < v_arrDatas.length; i++) {
+                if (v_arrDatas[i].num == v_gnum) {
+                    var v_reply = {};
+                    var v_reple = v_arrDatas[i];
+                    v_reply.content = v_repleContent.value;
+                    v_reply.pw = v_replePw.value;
+                    v_reply.date = new Date().toLocaleDateString();
+
+                    if (!v_reple.reply) {
+                        v_reple.reply = [];
+                        v_reple.reply.push(v_reply);
+                    } else {
+                        v_reple.reply.push(v_reply);
+                    }
+                    alert("정상적으로 덧글이 등록되었습니다.");
+                    location.href = "read_b.html?g_num" + v_gnum;
+                }
+            }
+            localStorage.setItem("baristarList", JSON.stringify(v_arrDatas));
+        }
+
+        function f_init() {
+            for (var i = 0; i < v_arrDatas.length; i++) {
+                if (v_arrDatas[i].num == v_gnum) {      // 찾았다면 타이틀부터 시작해서 ... 다 부려주기
+                    v_title.value = v_arrDatas[i].title;
+                    var v_replyArr = v_arrDatas[i].reply;
+                    // checkbox에 v_arrDatas[i].skills의 배열에 있는 값이 체크되도록 해봅시다 ㅜㅜ
+                    v_baristar.value = v_arrDatas[i].baristar;
+                    var v_baristarArr = v_arrDatas[i].baristar; // skills 속성은 배열!!
+                    for (var k = 0; k < v_baristarArr.length; k++) {
+                        var v_val = v_baristarArr[k];
+                        for (var j = 0; j < v_baristar.length; j++) {
+                            if (v_baristar[j].value == v_val) {
+                                // 체크박스의 밸류값과 같다면~!
+                                v_baristar[j].checked = true;       // 강제 체크 제어!! 
+                            }
+                        }
+                    }
+                    v_content.value = v_arrDatas[i].content;
+                    for (var j = 0; j < v_replyArr.length; j++) {
+                        v_replyArea.append("내용: " + v_replyArr[j].content + " ");
+                        v_replyArea.append("작성일: " + v_replyArr[j].date + " ｜｜");
+                    }
+                }
+            }
+        }
+
+        function fn_objArrayToCheckedArray(objs){
+            var retArr=[];
+            for(i = 0; i <  objs.length; i++){
+                obj = objs[i];
+                console.log('obj' , obj);
+                if(obj.checked == true){
+                    retArr.push(obj.value);
+                }
+            }
+            return retArr;
+        }
+
+        function f_delete() {
+            var v_delNum = v_gnum;
+            var v_checkPw = v_password.value;
+
+            for (var j = 0; j < v_arrDatas.length; j++) {
+                if (v_arrDatas[j].num == v_delNum) {
+                    if (v_arrDatas[j].password == v_checkPw) {
+                        v_arrDatas.splice(j, 1);
+                        j--;                  //지웠을땐 j값 증가 못하게, 뒷놈이 앞으로
+                    } else if (v_arrDatas[j].password != v_checkPw) {
+                        alert("글 작성 시 비밀번호와 다릅니다.")
+                    }
+                }
+            }
+            localStorage.setItem(v_tblName, JSON.stringify(v_arrDatas));
+            alert("정상적으로 글이 삭제되었습니다.");
+            location.replace("baristarList.html"); // 눈으로 편하게 확인하기 위해서
+        }
+
+
+
+        window.onload = f_init();
+        CKEDITOR.replace('nm_content', {
+            filebrowserUploadUrl: "./serverSide.php?type=file",
+            filebrowserImageUploadUrl: "./serverSide.php?type=image",
+        });
+    </script>
+</body>
+
+</html>

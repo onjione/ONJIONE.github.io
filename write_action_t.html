@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="../CKEDITOR/ckeditor4/ckeditor.js"></script>
+<script src="./jsp.js"></script>
+<script>
+    var v_title = request.getParameter("nm_title").replace(/\+/g," ");
+    var v_tea = request.getParameterValues("nm_tea"); // 배열
+    var v_content = request.getParameter("nm_content").replace(/\+/g," ");
+
+    /*
+    while (v_content.indexOf("+") != -1) {
+        v_content = v_content.replace("+", " ");
+    }
+    */
+
+    var v_tblName = "teaList";  // key값 임의로 정한 테이블명
+    //    var v_arrData =[];    // json을 담아줄 배열 선언, 실제 테이블 역할
+
+    var v_record = {};      //VO 받아온 값 전부를 1개의 JSON으로 묶기위한 json
+    v_record.title = v_title;
+    v_record.tea = v_tea;  // 배열임에 주의
+    v_record.content = v_content;
+
+    if (!localStorage.getItem(v_tblName)) {
+        //처음 데이타가 들어감
+        var v_arrData = [];
+        v_record.num = 1;    // Primary-Key로 쓸 고유값
+        v_arrData.push(v_record);
+        localStorage.setItem(v_tblName, JSON.stringify(v_arrData));
+    } else {
+        //있는 데이타 꺼내오기
+        var v_arrData = JSON.parse(localStorage.getItem(v_tblName));
+        v_record.num = (v_arrData[v_arrData.length - 1]).num + 1;
+        v_arrData.push(v_record);
+        localStorage.setItem(v_tblName, JSON.stringify(v_arrData));
+    }
+    alert("정상적으로 글이 등록되었습니다.");
+    location.href = "teaStory.html";  // 목록으로 이동
+
+//    v_arrData.push(v_record);  // 배열에 묶어준 json 추가
+//    localStorage.setItem(v_tblName, JSON.stringify(v_arrData));
+</script>
+
+</html>
